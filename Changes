@@ -1,5 +1,8 @@
 Revision history for Perl module cPanel::APIClient
 
+0.03 - 3 Jul 2020
+- Add repository information to Makefile.PL.
+
 0.02 - 3 Jul 2020
 - Trivial documentation update
 

@@ -15,17 +15,17 @@ WriteMakefile(
         resources => {
             repository => {
                 type => 'git',
-#                url => 'git://github.com/FGasper/p5-Protocol-DBus.git',
-#                web => 'https://github.com/FGasper/p5-Protocol-DBus',
+                url => 'git@github.com:cpanel/p5-cPanel-APIClient.git',
+                web => 'https://github.com/cpanel/p5-cPanel-APIClient',
             },
             bugtracker => {
-#                web => 'https://github.com/FGasper/p5-Protocol-DBus/issues',
+                web => 'https://github.com/cpanel/p5-cPanel-APIClient/issues',
             },
         },
     },
 
     NAME         => 'cPanel::APIClient',
-    AUTHOR       => 'Felipe Gasper (FELIPE)',
+    AUTHOR       => 'cPanel, L. L. C. (CPANEL)',
     VERSION_FROM => 'lib/cPanel/APIClient.pm',      # finds \$VERSION
     ABSTRACT_FROM => 'lib/cPanel/APIClient.pm',
     LICENSE      => 'perl',
