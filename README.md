@@ -4,7 +4,7 @@ cPanel::APIClient - [cPanel](http://cpanel.com) APIs, à la TIMTOWTDI!
 
 # SYNOPSIS
 
-Create a [cPanel::APICaller::Service::cpanel](https://metacpan.org/pod/cPanel::APICaller::Service::cpanel) object
+Create a [cPanel::APIClient::Service::cpanel](https://metacpan.org/pod/cPanel::APIClient::Service::cpanel) object
 to call cPanel APIs:
 
     my $cpanel = cPanel::APIClient->create(
@@ -16,7 +16,7 @@ to call cPanel APIs:
 
     my $pops_ar = $resp->get_data();
 
-Create a [cPanel::APICaller::Service::whm](https://metacpan.org/pod/cPanel::APICaller::Service::whm) object
+Create a [cPanel::APIClient::Service::whm](https://metacpan.org/pod/cPanel::APIClient::Service::whm) object
 to call WHM APIs:
 
     my $whm = cPanel::APIClient->create(

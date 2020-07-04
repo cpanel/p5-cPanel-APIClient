@@ -3,7 +3,7 @@ package cPanel::APIClient;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =encoding utf-8
 
@@ -13,7 +13,7 @@ cPanel::APIClient - L<cPanel|http://cpanel.com> APIs, à la TIMTOWTDI!
 
 =head1 SYNOPSIS
 
-Create a L<cPanel::APICaller::Service::cpanel> object
+Create a L<cPanel::APIClient::Service::cpanel> object
 to call cPanel APIs:
 
     my $cpanel = cPanel::APIClient->create(
@@ -25,7 +25,7 @@ to call cPanel APIs:
 
     my $pops_ar = $resp->get_data();
 
-Create a L<cPanel::APICaller::Service::whm> object
+Create a L<cPanel::APIClient::Service::whm> object
 to call WHM APIs:
 
     my $whm = cPanel::APIClient->create(
