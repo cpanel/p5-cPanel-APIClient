@@ -50,5 +50,6 @@ WriteMakefile(
         'Test::Deep' => 0,
         'Test::FailWarnings' => 0,
         'Test::Class' => 0,
+        'Test::MockModule' => 0.173,
     },
 );
