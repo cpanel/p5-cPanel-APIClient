@@ -1,5 +1,9 @@
 Revision history for Perl module cPanel::APIClient
 
+0.05
+- Use pure-Perl IO::Async in tests.
+  (Avoids epoll EBADF bug: https://rt.cpan.org/Public/Bug/Display.html?id=132537)
+
 0.04 - 4 Jul 2020
 - Fix missing Test::MockModule dependency.
 

@@ -28,6 +28,7 @@ use Test::FailWarnings;
 __PACKAGE__->new()->runtests() if !caller;
 
 use constant _CP_REQUIRE => (
+    'AnyEvent::Loop',
     'Net::Curl::Promiser::AnyEvent',
 );
 
@@ -106,21 +107,25 @@ sub test_uapi_cancel : Tests(1) {
 
         $cv1->recv();
 
-        $remote_cp->cancel( $pending, 'beeecause' );
+        $remote_cp->cancel( $pending );
 
         my $cv2 = AnyEvent->condvar();
 
-        $pending->promise()->catch( sub { } )->finally($cv2);
+        my $fate;
+
+        $pending->promise()->then(
+            sub { $fate = [0, shift()] },
+            sub { $fate = [1, shift()] },
+        );
+
+        my $timeout = AnyEvent->timer(
+            after => 1,
+            cb => $cv2,
+        );
+
         $cv2->recv();
 
-        cmp_deeply(
-            $reason,
-            all(
-                Isa('cPanel::APIClient::X::SubTransport'),
-                re(qr<beeecause>),
-            ),
-            'cancel() rejects the promise as expected',
-        ) or diag explain $reason;
+        is( $fate, undef, 'promise for canceled request doesn’t resolve' );
     }
 
     return;
