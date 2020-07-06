@@ -28,6 +28,11 @@ __PACKAGE__->new()->runtests() if !caller;
 use constant _CP_REQUIRE => (
     'Mojo::UserAgent',
     [ 'Mojolicious', '7.80' ],
+    sub {
+        if ( $^V le v5.12.0 ) {
+            die 'Avoiding pre-5.12 length(undef) warnings …';
+        }
+    },
 );
 
 sub TRANSPORT_PIECE {
