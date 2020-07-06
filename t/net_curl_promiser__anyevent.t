@@ -63,9 +63,10 @@ sub test_uapi_cancel : Tests(1) {
     my ($self) = @_;
 
   SKIP: {
-        if ( !Net::Curl::Promiser->can('cancel_handle') ) {
-            my $version = Net::Curl::Promiser->VERSION();
-            skip "Net::Curl::Promiser $version lacks cancel_handle().", $self->num_tests();
+        my $version = Net::Curl::Promiser->VERSION();
+        my $min_version = 0.12;
+        if ( $version < $min_version ) {
+            skip "This test requires Net::Curl::Promiser $min_version or newer.", $self->num_tests();
         }
 
         # We don’t cancel() the request immediately because that’ll prompt
