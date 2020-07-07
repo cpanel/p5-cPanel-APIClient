@@ -53,3 +53,20 @@ WriteMakefile(
         'Test::MockModule' => '0.170',
     },
 );
+
+force_verbose_output();
+
+# Useful for diagnosing CPAN Testers issues …
+sub force_verbose_output {
+    my $path = 'Makefile';
+
+    open my $fh, '+<', 'Makefile' or do {
+        print "No “Makefile” …$/";
+        return;
+    };
+
+    my $txt = do { local $/; <$fh> };
+    $txt =~ s<TEST_VERBOSE=0><TEST_VERBOSE=1>;
+    seek $fh, 0, 0;
+    print {$fh} $txt;
+}
