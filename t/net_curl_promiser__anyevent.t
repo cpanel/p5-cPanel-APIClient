@@ -25,6 +25,8 @@ use Test::More;
 use Test::Deep;
 use Test::FailWarnings;
 
+$INC{'TEST_VERBOSE'} = 1;
+
 __PACKAGE__->new()->runtests() if !caller;
 
 use constant _CP_REQUIRE => (
@@ -107,15 +109,6 @@ sub test_uapi_cancel : Tests(1) {
 
         my $pending = $remote_cp->call_uapi( 'Whatsit', 'heyhey' );
 
-        my $reason;
-        $pending->promise()->catch( sub { $reason = shift } );
-
-        $cv1->recv();
-
-        $remote_cp->cancel( $pending );
-
-        my $cv2 = AnyEvent->condvar();
-
         my $fate;
 
         $pending->promise()->then(
@@ -123,14 +116,25 @@ sub test_uapi_cancel : Tests(1) {
             sub { $fate = [1, shift()] },
         );
 
-        my $timeout = AnyEvent->timer(
-            after => 1,
-            cb => $cv2,
-        );
+        $cv1->recv();
 
-        $cv2->recv();
+        if ($fate) {
+            skip 'Wait … we already finished what we were about to cancel?? That’s weird.', $self->num_tests();
+        }
+        else {
+            $remote_cp->cancel( $pending );
 
-        is( $fate, undef, 'promise for canceled request doesn’t resolve' );
+            my $cv2 = AnyEvent->condvar();
+
+            my $timeout = AnyEvent->timer(
+                after => 1,
+                cb => $cv2,
+            );
+
+            $cv2->recv();
+
+            is( $fate, undef, 'promise for canceled request doesn’t resolve' );
+        }
     }
 
     return;

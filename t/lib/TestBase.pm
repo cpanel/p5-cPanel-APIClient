@@ -21,6 +21,12 @@ use cPanel::APIClient;
 
 sub fail_if_returned_early { 1 }
 
+sub runtests {
+    local $INC{'TEST_VERBOSE'} = 1;
+
+    return shift()->SUPER::runtests();
+}
+
 sub SKIP_CLASS {
     my ($self) = @_;
 
