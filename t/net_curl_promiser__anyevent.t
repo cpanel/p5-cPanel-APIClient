@@ -31,6 +31,8 @@ use constant _CP_REQUIRE => (
     'AnyEvent::Loop',
     sub { diag "Using AnyEvent $AnyEvent::VERSION"; },
     'Net::Curl::Promiser::AnyEvent',
+    sub { diag Net::Curl::version(); },
+    sub { diag "Using Net::Curl $Net::Curl::VERSION"; },
     sub { diag "Using Net::Curl::Promiser $Net::Curl::Promiser::VERSION" },
 );
 
