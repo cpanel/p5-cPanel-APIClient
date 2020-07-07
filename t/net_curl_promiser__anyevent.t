@@ -29,6 +29,7 @@ __PACKAGE__->new()->runtests() if !caller;
 
 use constant _CP_REQUIRE => (
     'AnyEvent::Loop',
+    sub { diag "Using AnyEvent $AnyEvent::VERSION"; },
     'Net::Curl::Promiser::AnyEvent',
 );
 

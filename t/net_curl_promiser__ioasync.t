@@ -21,12 +21,15 @@ use parent (
     'TestHTTPUAPIMixin',
 );
 
+use Test::More;
+
 use Test::FailWarnings;
 
 __PACKAGE__->new()->runtests() if !caller;
 
 use constant _CP_REQUIRE => (
     'IO::Async::Loop',
+    sub { diag "Using IO::Async::Loop $IO::Async::Loop::VERSION" },
     'Net::Curl::Promiser::IOAsync',
 );
 
