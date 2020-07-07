@@ -31,6 +31,7 @@ use constant _CP_REQUIRE => (
     'AnyEvent::Loop',
     sub { diag "Using AnyEvent $AnyEvent::VERSION"; },
     'Net::Curl::Promiser::AnyEvent',
+    sub { diag "Using Net::Curl::Promiser $Net::Curl::Promiser::VERSION" },
 );
 
 sub TRANSPORT_PIECE {
@@ -64,7 +65,7 @@ sub test_uapi_cancel : Tests(1) {
     my ($self) = @_;
 
   SKIP: {
-        my $version = Net::Curl::Promiser->VERSION();
+        my $version = $Net::Curl::Promiser::VERSION;
         my $min_version = 0.12;
         if ( $version < $min_version ) {
             skip "This test requires Net::Curl::Promiser $min_version or newer.", $self->num_tests();
