@@ -54,7 +54,8 @@ WriteMakefile(
     },
 );
 
-force_verbose_output();
+# For tracking down CPAN Testers failures:
+force_verbose_output() if $ENV{'AUTOMATED_TESTING'};
 
 # Useful for diagnosing CPAN Testers issues …
 sub force_verbose_output {

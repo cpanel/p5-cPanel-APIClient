@@ -1,6 +1,6 @@
 Revision history for Perl module cPanel::APIClient
 
-0.06 - 6 Jul 2020
+0.06
 - Downgrade Test::MockModule requirement.
 - Avoid testing Mojo in 5.10 (to avoid a length(undef) warning).
 - Add diagnostics to tests.
