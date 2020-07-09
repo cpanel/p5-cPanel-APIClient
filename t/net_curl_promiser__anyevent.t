@@ -25,8 +25,6 @@ use Test::More;
 use Test::Deep;
 use Test::FailWarnings;
 
-$INC{'TEST_VERBOSE'} = 1;
-
 __PACKAGE__->new()->runtests() if !caller;
 
 use constant _CP_REQUIRE => (
