@@ -28,9 +28,13 @@ use Test::FailWarnings;
 __PACKAGE__->new()->runtests() if !caller;
 
 use constant _CP_REQUIRE => (
+
+    # Load NCP first because some Windows test runs produce spurious
+    # warnings from IO::Async.
+    'Net::Curl::Promiser::IOAsync',
+
     'IO::Async::Loop',
     sub { diag "Using IO::Async::Loop $IO::Async::Loop::VERSION" },
-    'Net::Curl::Promiser::IOAsync',
 );
 
 sub runtests {

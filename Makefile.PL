@@ -55,7 +55,7 @@ WriteMakefile(
 );
 
 # For tracking down CPAN Testers failures:
-force_verbose_output() if $ENV{'AUTOMATED_TESTING'};
+force_verbose_output() if $ENV{'PERL_CPAN_REPORTER_CONFIG'};
 
 # Useful for diagnosing CPAN Testers issues …
 sub force_verbose_output {
