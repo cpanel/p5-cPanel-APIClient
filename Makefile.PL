@@ -51,6 +51,9 @@ WriteMakefile(
         'Test::FailWarnings' => 0,
         'Test::Class' => 0,
         'Test::MockModule' => '0.170',
+
+        'Promise::ES6' => 0.23,
+        'Carp::Always' => 0,
     },
 );
 
