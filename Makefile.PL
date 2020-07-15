@@ -53,7 +53,6 @@ WriteMakefile(
         'Test::MockModule' => '0.170',
 
         'Promise::ES6' => 0.23,
-        'Carp::Always' => 0,
     },
 );
 

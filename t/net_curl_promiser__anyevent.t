@@ -34,7 +34,6 @@ use constant _CP_REQUIRE => (
     sub { diag Net::Curl::version(); },
     sub { diag "Using Net::Curl $Net::Curl::VERSION"; },
     sub { diag "Using Net::Curl::Promiser $Net::Curl::Promiser::VERSION" },
-    'Carp::Always',
 );
 
 sub TRANSPORT_PIECE {
