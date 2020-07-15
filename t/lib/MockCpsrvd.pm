@@ -147,9 +147,13 @@ sub _serve_socket {
 
             while ( !$we_are_done ) {
                 my $hdr = do { local $/ = "\x0d\x0a\x0d\x0a"; <$peer> };
+
+                diag "Socket is done." if !$hdr;
                 last if !$hdr;
 
                 my $req = HTTP::Request->parse($hdr);
+
+                diag "Got request: " . $req->uri()->as_string();
 
                 if ( $req->uri()->as_string() =~ m<noanswer> ) {
                     kill 'TERM', $$;

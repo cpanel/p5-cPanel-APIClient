@@ -18,7 +18,7 @@ use lib "$FindBin::Bin/lib";
 
 use parent (
     'TestHTTPBase',
-#    'TestHTTPUAPIMixin',
+    'TestHTTPUAPIMixin',
 );
 
 use Test::More;
@@ -34,6 +34,7 @@ use constant _CP_REQUIRE => (
     sub { diag Net::Curl::version(); },
     sub { diag "Using Net::Curl $Net::Curl::VERSION"; },
     sub { diag "Using Net::Curl::Promiser $Net::Curl::Promiser::VERSION" },
+    'Carp::Always',
 );
 
 sub TRANSPORT_PIECE {
@@ -117,6 +118,7 @@ sub test_uapi_cancel : Tests(1) {
         $cv1->recv();
 
         if ($fate) {
+            diag explain $fate;
             skip 'Wait … we already finished what we were about to cancel?? That’s weird.', $self->num_tests();
         }
         else {
