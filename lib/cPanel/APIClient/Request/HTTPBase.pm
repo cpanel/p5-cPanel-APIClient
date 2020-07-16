@@ -23,6 +23,11 @@ sub get_http_headers {
 
 sub parse_http_response {
     my ( $self, $resp_obj, $resp_body ) = @_;
+no warnings 'once';
+if ($cPanel::APIClient::DEBUG) {
+use Data::Dumper;
+print STDERR Dumper( $resp_obj );
+}
 
     if ( $resp_obj->code() !~ m<\A2> ) {
         die cPanel::APIClient::X->create( 'HTTP', $resp_obj->as_string() . $/ . $resp_body );

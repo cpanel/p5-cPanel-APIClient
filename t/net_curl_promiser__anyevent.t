@@ -63,8 +63,11 @@ sub AWAIT {
     return $value;
 }
 
-sub test_uapi_cancel : Tests(1) {
+sub test_uapi_cancel : Tests(2) {
     my ($self) = @_;
+
+    no warnings 'once';
+    local $cPanel::APIClient::DEBUG = 1;
 
   SKIP: {
         my $version = $Net::Curl::Promiser::VERSION;
@@ -116,24 +119,24 @@ sub test_uapi_cancel : Tests(1) {
 
         $cv1->recv();
 
+        is( $fate, undef, 'promise for canceled request doesn’t resolve' ) or diag explain $fate;
+
         if ($fate) {
-            diag explain $fate;
-            skip 'Wait … we already finished what we were about to cancel?? That’s weird.', $self->num_tests();
+            skip 'Wait … we already finished what we were about to cancel?? That’s weird.', 1;
         }
-        else {
-            $remote_cp->cancel( $pending );
 
-            my $cv2 = AnyEvent->condvar();
+        $remote_cp->cancel( $pending );
 
-            my $timeout = AnyEvent->timer(
-                after => 1,
-                cb => $cv2,
-            );
+        my $cv2 = AnyEvent->condvar();
 
-            $cv2->recv();
+        my $timeout = AnyEvent->timer(
+            after => 1,
+            cb => $cv2,
+        );
 
-            is( $fate, undef, 'promise for canceled request doesn’t resolve' );
-        }
+        $cv2->recv();
+
+        is( $fate, undef, 'promise for canceled request still doesn’t resolve' ) or diag explain $fate;
     }
 
     return;
