@@ -197,7 +197,10 @@ sub request {
             $easy->pushopt( Net::Curl::Easy::CURLOPT_HTTPHEADER, \@header_strs );
         }
 
-        my $promise = $self->{'promiser'}->add_handle($easy)->then(
+        my $promise1 = $self->{'promiser'}->add_handle($easy);
+        print STDERR "promise1: $promise1\n";
+
+        my $promise2 = $promise1->then(
             sub {
                 return _xform_easy_response( $_[0], $request_obj );
             },
@@ -208,10 +211,14 @@ sub request {
                 die cPanel::APIClient::X->create( 'SubTransport', $str, code => $code );
             },
         );
+        print STDERR "promise2: $promise2\n";
 
-        $promise->catch( sub { } )->finally( sub { $settled = 1 } );
+        my $promise3 = $promise2->finally( sub {
+            $settled = 1;
+        } );
+        print STDERR "promise3: $promise3\n";
 
-        return $promise;
+        return $promise3;
     };
 
     my $promise = $self->_get_session_promise($service_obj);

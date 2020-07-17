@@ -34,6 +34,8 @@ use constant _CP_REQUIRE => (
     sub { diag Net::Curl::version(); },
     sub { diag "Using Net::Curl $Net::Curl::VERSION"; },
     sub { diag "Using Net::Curl::Promiser $Net::Curl::Promiser::VERSION" },
+    'Promise::ES6',
+    sub { diag "Promise::ES6 $Promise::ES6::VERSION" },
 );
 
 sub TRANSPORT_PIECE {
@@ -112,10 +114,17 @@ sub test_uapi_cancel : Tests(2) {
 
         my $fate;
 
-        $pending->promise()->then(
-            sub { $fate = [0, shift()] },
-            sub { $fate = [1, shift()] },
-        );
+        my $main_p = $pending->promise();
+        diag "main promise: $main_p";
+
+        {
+            my $sub_p = $main_p->then(
+                sub { $fate = [0, shift()] },
+                sub { $fate = [1, shift()] },
+            );
+
+            diag "2nd promise: $sub_p";
+        }
 
         $cv1->recv();
 
