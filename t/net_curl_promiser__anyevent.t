@@ -65,7 +65,7 @@ sub AWAIT {
     return $value;
 }
 
-sub test_uapi_cancel : Tests(2) {
+sub test_uapi_cancel : Tests(1) {
     my ($self) = @_;
 
     no warnings 'once';
@@ -128,10 +128,8 @@ sub test_uapi_cancel : Tests(2) {
 
         $cv1->recv();
 
-        is( $fate, undef, 'promise for canceled request doesn’t resolve' ) or diag explain $fate;
-
         if ($fate) {
-            skip 'Wait … we already finished what we were about to cancel?? That’s weird.', 1;
+            skip 'We already finished what we were about to cancel.', 1;
         }
 
         $remote_cp->cancel( $pending );

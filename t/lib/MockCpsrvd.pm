@@ -123,6 +123,7 @@ sub terminate {
     my ($self) = @_;
 
     kill 'KILL', $self->{'pid'};
+
     return $self->wait();
 }
 
@@ -140,7 +141,10 @@ sub _serve_socket {
             next;
         };
 
-        next if fork;
+        if (my $cpid = fork) {
+            diag "Forked handler PID $cpid";
+            next;
+        }
 
         my $ok = eval {
             my $we_are_done;
@@ -148,7 +152,7 @@ sub _serve_socket {
             while ( !$we_are_done ) {
                 my $hdr = do { local $/ = "\x0d\x0a\x0d\x0a"; <$peer> };
 
-                diag "Socket is done." if !$hdr;
+                diag "Handler PID $$ socket is done." if !$hdr;
                 last if !$hdr;
 
                 my $req = HTTP::Request->parse($hdr);
@@ -156,6 +160,7 @@ sub _serve_socket {
                 diag "Got request: " . $req->uri()->as_string();
 
                 if ( $req->uri()->as_string() =~ m<noanswer> ) {
+                    diag "Handler PID $$ self-terminating per request";
                     kill 'TERM', $$;
                 }
 
@@ -165,7 +170,7 @@ sub _serve_socket {
 
                 my $body;
 
-                if ($content_length) {
+                if (defined $content_length) {
                     diag "Expecting $content_length content bytes …";
 
                     $body = q<>;
@@ -181,7 +186,7 @@ sub _serve_socket {
                     }
                 }
                 else {
-                    diag "No Content-Length sent; assuming empty payload …";
+                    diag "No Content-Length sent in request; assuming empty payload …";
 
                     $body        = q<>;
                     $we_are_done = 1;
@@ -213,6 +218,8 @@ sub _serve_socket {
                 $resp_obj->header( 'X-TestServer' => $class );
 
                 print {$peer} 'HTTP/1.1 ' . $resp_obj->as_string("\x0d\x0a");
+
+                diag "Handler PID $$ sent response";
             }
 
             close $peer;
@@ -221,6 +228,8 @@ sub _serve_socket {
         };
 
         warn "Server grandchild PID $$: $@" if !$ok;
+
+        diag "Handler PID $$ exit (ok? $ok)";
 
         exit( !$ok ? 1 : 0 );
     }
