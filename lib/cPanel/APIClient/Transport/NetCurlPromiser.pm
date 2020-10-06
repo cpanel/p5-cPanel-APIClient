@@ -122,7 +122,7 @@ sub _create_easy {
 
     die "Unsupported HTTP method: $method" if $method ne 'POST';
 
-    my $easy = Net::Curl::Easy->new();
+    my $easy = $self->{'_cached_easy'} ||= Net::Curl::Easy->new();
 
     if ( 'off' eq $self->_get_tls_verification() ) {
         $easy->setopt( Net::Curl::Easy::CURLOPT_SSL_VERIFYPEER, 0 );
