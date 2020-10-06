@@ -3,7 +3,7 @@ package cPanel::APIClient;
 use strict;
 use warnings;
 
-our $VERSION = '0.06_05';
+our $VERSION = '0.06_06';
 
 =encoding utf-8
 
