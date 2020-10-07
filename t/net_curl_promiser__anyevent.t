@@ -27,15 +27,23 @@ use Test::FailWarnings;
 
 __PACKAGE__->new()->runtests() if !caller;
 
+my $diagged;
+
 use constant _CP_REQUIRE => (
     'AnyEvent::Loop',
-    sub { diag "Using AnyEvent $AnyEvent::VERSION"; },
+
     'Net::Curl::Promiser::AnyEvent',
-    sub { diag Net::Curl::version(); },
-    sub { diag "Using Net::Curl $Net::Curl::VERSION"; },
-    sub { diag "Using Net::Curl::Promiser $Net::Curl::Promiser::VERSION" },
-    'Promise::ES6',
-    sub { diag "Promise::ES6 $Promise::ES6::VERSION" },
+
+    [ 'Promise::ES6', '0.23' ],
+
+    sub {
+        $diagged++ or do {
+            diag "Using libcurl " . Net::Curl::version();
+            diag "Using Net::Curl $Net::Curl::VERSION";
+            diag "Using Net::Curl::Promiser $Net::Curl::Promiser::VERSION";
+            diag "Using AnyEvent $AnyEvent::VERSION";
+        },
+    },
 );
 
 sub TRANSPORT_PIECE {

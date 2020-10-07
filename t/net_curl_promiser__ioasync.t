@@ -37,6 +37,8 @@ use constant _CP_REQUIRE => (
 
     'IO::Async::Loop',
 
+    [ 'Promise::ES6', '0.23' ],
+
     sub {
         $diagged++ or do {
             diag "Using libcurl " . Net::Curl::version();
