@@ -27,6 +27,8 @@ use Test::FailWarnings;
 
 __PACKAGE__->new()->runtests() if !caller;
 
+my $diagged;
+
 use constant _CP_REQUIRE => (
 
     # Load NCP first because some Windows test runs produce spurious
@@ -34,7 +36,16 @@ use constant _CP_REQUIRE => (
     'Net::Curl::Promiser::IOAsync',
 
     'IO::Async::Loop',
-    sub { diag "Using IO::Async::Loop $IO::Async::Loop::VERSION" },
+
+    sub {
+        $diagged++ or do {
+            diag "Using libcurl " . Net::Curl::version();
+            diag "Using Net::Curl $Net::Curl::VERSION";
+            diag "Using Net::Curl::Promiser $Net::Curl::Promiser::VERSION";
+            diag "Using IO::Async::Loop $IO::Async::Loop::VERSION";
+        };
+    },
+
 );
 
 sub runtests {
@@ -60,12 +71,14 @@ sub AWAIT {
 
     my ( $ok, $value, $reason );
 
+    my $loop = $self->{'_loop'};
+
     $pending->promise()->then(
         sub { $value = shift; $ok = 1 },
         sub { $reason = shift },
-    )->finally( sub { $self->{'_loop'}->stop() } );
+    )->finally( sub { $loop->stop() } );
 
-    $self->{'_loop'}->run();
+    $loop->run();
 
     die $reason if !$ok;
 

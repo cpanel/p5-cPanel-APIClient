@@ -51,18 +51,14 @@ sub TRANSPORT_PIECE {
 sub AWAIT {
     my ( $self, $pending ) = @_;
 
-    my ( $ok, $value, $reason );
-
     my $cv = AnyEvent->condvar();
+
     $pending->promise()->then(
-        sub { $value = shift; $ok = 1 },
-        sub { $reason = shift },
-    )->finally($cv);
-    $cv->recv();
+        $cv,
+        sub { $cv->croak(shift) },
+    );
 
-    die $reason if !$ok;
-
-    return $value;
+    return $cv->recv();
 }
 
 sub test_uapi_cancel : Tests(1) {

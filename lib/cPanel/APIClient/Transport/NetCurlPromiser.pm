@@ -198,7 +198,6 @@ sub request {
         }
 
         my $promise1 = $self->{'promiser'}->add_handle($easy);
-        print STDERR "promise1: $promise1\n";
 
         my $promise2 = $promise1->then(
             sub {
@@ -211,12 +210,10 @@ sub request {
                 die cPanel::APIClient::X->create( 'SubTransport', $str, code => $code );
             },
         );
-        print STDERR "promise2: $promise2\n";
 
         my $promise3 = $promise2->finally( sub {
             $settled = 1;
         } );
-        print STDERR "promise3: $promise3\n";
 
         return $promise3;
     };
