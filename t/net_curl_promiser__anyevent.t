@@ -119,15 +119,12 @@ sub test_uapi_cancel : Tests(1) {
         my $fate;
 
         my $main_p = $pending->promise();
-        diag "main promise: $main_p";
 
         {
             my $sub_p = $main_p->then(
                 sub { $fate = [0, shift()] },
                 sub { $fate = [1, shift()] },
             );
-
-            diag "2nd promise: $sub_p";
         }
 
         $cv1->recv();
