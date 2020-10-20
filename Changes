@@ -1,6 +1,6 @@
 Revision history for Perl module cPanel::APIClient
 
-0.07 -
+0.07 - 20 Oct 2020
 - BUG FIX: WHM1 HTTP responses now work.
 - Additional tests added for WHM.
 
