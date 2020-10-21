@@ -52,6 +52,7 @@ t/lib/MockCpsrvd/cpanel.pm
 t/lib/MockCpsrvd/whm.pm
 t/lib/TestBase.pm
 t/lib/TestHTTPBase.pm
+t/lib/TestHTTPCpanelMixin.pm
 t/lib/TestHTTPTinyMixin.pm
 t/lib/TestHTTPUAPIMixin.pm
 t/lib/TestHTTPWHM1Mixin.pm
