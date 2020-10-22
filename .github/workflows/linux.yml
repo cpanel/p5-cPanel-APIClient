@@ -49,7 +49,7 @@ jobs:
       - name: Install Optionals
         run: cpanm --notest Net::Curl::Promiser AnyEvent IO::Async IPC::Run
       - name: Install Version-Dependent Optionals
-        run: cpanm --notest Mojolicious ||:
+        run: 'cpanm --notest Mojolicious ||:'
       - name: perl Makefile.PL
         run: perl Makefile.PL
       - name: make
