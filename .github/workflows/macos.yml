@@ -28,6 +28,8 @@ jobs:
         run: perl -V
       - name: Install Dependencies
         run: curl -L https://cpanmin.us | perl - --notest --installdeps .
+      - name: Install Optionals
+        run: curl -L https://cpanmin.us | perl - --notest Mojolicious Net::Curl::Promiser AnyEvent IO::Async IPC::Run
       - name: perl Makefile.PL
         run: perl Makefile.PL
       - name: make
