@@ -20,6 +20,10 @@ sub HTTP_RESPONSE_CLASS { return 'cPanel::APIClient::Response::UAPI' }
 sub new {
     my ($class, $cpusername, $module, $fn, $args_hr, $metaargs_hr) = @_;
 
+    die 'Need username!' if !defined $cpusername || !length $cpusername;
+    die 'Need module!' if !defined $module || !length $module;
+    die 'Need function name!' if !defined $fn || !length $fn;
+
     my %args = (
         cpanel_jsonapi_apiversion => 3,
         cpanel_jsonapi_module     => $module,
@@ -64,7 +68,7 @@ sub _EXTRACT_RESPONSE {
     #   "apiversion": 3
     # }
 
-    return $_[1]->{'result'} if $_[1]->{'result'};
+    return $_[1]->{'result'} if 'HASH' eq ref $_[1]->{'result'};
 
     # If the given username fails authn, though, an error like this is
     # returned:
