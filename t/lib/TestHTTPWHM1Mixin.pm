@@ -39,7 +39,7 @@ sub cpanel_uapi_with_password : Tests(2) {
         service => 'whm',
 
         credentials => {
-            username  => 'johnny',
+            username => 'johnny',
             password => 'mysecret',
         },
     );
@@ -52,13 +52,13 @@ sub cpanel_uapi_with_password : Tests(2) {
             methods(
                 [ isa => 'cPanel::APIClient::Response::UAPI' ] => bool(1),
 
-                succeeded                                      => 1,
-                get_data                                       => {
+                succeeded => 1,
+                get_data  => {
                     content => all(
-                        re( qr<cpanel_jsonapi_func=list_pops> ),
-                        re( qr<cpanel_jsonapi_apiversion=3> ),
-                        re( qr<cpanel_jsonapi_user=hank> ),
-                        re( qr<cpanel_jsonapi_module=Email> ),
+                        re(qr<cpanel_jsonapi_func=list_pops>),
+                        re(qr<cpanel_jsonapi_apiversion=3>),
+                        re(qr<cpanel_jsonapi_user=hank>),
+                        re(qr<cpanel_jsonapi_module=Email>),
                     ),
                     method  => 'POST',
                     uri     => '/json-api/cpanel',
@@ -97,7 +97,7 @@ sub cpanel_uapi_with_bad_user : Tests(1) {
         service => 'whm',
 
         credentials => {
-            username  => 'johnny',
+            username => 'johnny',
             password => 'mysecret',
         },
     );
@@ -127,12 +127,12 @@ sub simple_whm_with_password : Tests(2) {
         service => 'whm',
 
         credentials => {
-            username  => 'johnny',
+            username => 'johnny',
             password => 'mysecret',
         },
     );
 
-    my $got = $self->AWAIT( $remote_cp->call_api1( 'do_something_warnings2_messages2' ) );
+    my $got = $self->AWAIT( $remote_cp->call_api1('do_something_warnings2_messages2') );
 
     cmp_deeply(
         $got,
@@ -149,7 +149,7 @@ sub simple_whm_with_password : Tests(2) {
                     headers => ignore(),
                 },
 
-                get_nonfatal_messages   => bag(
+                get_nonfatal_messages => bag(
                     [ info => 'message1' ],
                     [ info => 'message2' ],
                     [ warn => 'warn1' ],
@@ -188,7 +188,7 @@ sub simple_whm_with_token : Tests(2) {
         },
     );
 
-    my $got = $self->AWAIT( $remote_cp->call_api1( 'do_something_warnings1_messages1' ) );
+    my $got = $self->AWAIT( $remote_cp->call_api1('do_something_warnings1_messages1') );
 
     cmp_deeply(
         $got,
@@ -198,14 +198,14 @@ sub simple_whm_with_token : Tests(2) {
 
                 get_error => undef,
 
-                get_data                                       => {
+                get_data => {
                     content => q<api.version=1>,
                     method  => 'POST',
                     uri     => '/json-api/do_something_warnings1_messages1',
                     headers => ignore(),
                 },
 
-                get_nonfatal_messages   => bag(
+                get_nonfatal_messages => bag(
                     [ info => 'message1' ],
                     [ info => 'message2' ],
                     [ warn => 'warn1' ],

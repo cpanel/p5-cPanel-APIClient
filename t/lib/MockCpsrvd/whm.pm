@@ -23,7 +23,7 @@ sub _get_response {
 
     my %resp;
 
-    if ($uri eq '/json-api/cpanel') {
+    if ( $uri eq '/json-api/cpanel' ) {
         %resp = _get_uapi_response($req);
     }
     else {
@@ -48,13 +48,13 @@ sub _get_uapi_response {
 
     my ($username) = $req->content() =~ m<cpanel_jsonapi_user=([^&]+)>;
 
-    if ($username =~ m<bad>) {
+    if ( $username =~ m<bad> ) {
         @ret_kv = (
             "data" => {
                 "reason" => "User parameter is invalid or was not supplied",
                 "result" => "0",
             },
-            "type" => "text",
+            "type"  => "text",
             "error" => "User parameter is invalid or was not supplied",
         );
     }
@@ -78,12 +78,12 @@ sub _get_uapi_response {
 sub _faux_data {
     my ($req) = @_;
 
-                return {
-                    method  => $req->method(),
-                    uri     => $req->uri()->as_string(),
-                    headers => [ $req->flatten() ],
-                    content => $req->content(),
-                };
+    return {
+        method  => $req->method(),
+        uri     => $req->uri()->as_string(),
+        headers => [ $req->flatten() ],
+        content => $req->content(),
+    };
 }
 
 sub _get_api1_response {
@@ -96,8 +96,8 @@ sub _get_api1_response {
     my %metadata = (
         version => 1,
         command => 'thecommand',
-        result => $status,
-        reason => "Status: $status",
+        result  => $status,
+        reason  => "Status: $status",
     );
 
     if ( $uri =~ m<warnings1> ) {
