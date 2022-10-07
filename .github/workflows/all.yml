@@ -1,0 +1,152 @@
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+  pull_request:
+
+env:
+    PERL_USE_UNSAFE_INC: 0
+    AUTHOR_TESTING: 1
+    AUTOMATED_TESTING: 1
+    RELEASE_TESTING: 1
+    PERL_CARTON_PATH: $GITHUB_WORKSPACE/local
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        perl-version:
+          - '5.36'
+          - '5.34'
+          - '5.32'
+          - '5.30'
+          - '5.28'
+          - '5.26'
+          - '5.24'
+          - '5.22'
+          - '5.20'
+          - '5.18'
+          - '5.16'
+          - '5.14'
+          - '5.12'
+          - '5.10'
+
+    container:
+      image: perldocker/perl-tester:${{ matrix.perl-version }}
+
+    steps:
+      - uses: actions/checkout@main
+      - name: perl -V
+        run: perl -V
+      - name: Install Dependencies
+        run: cpanm --notest --installdeps --with-configure --with-recommends .
+      - name: Install Version-Dependent Optionals
+        run: 'cpanm --notest Mojolicious ||:'
+      - name: perl Makefile.PL
+        run: perl Makefile.PL
+      - name: make
+        run: make
+      - name: Run Tests
+        run: make test
+
+  mac:
+    runs-on: macOS-latest
+
+    steps:
+      - uses: actions/checkout@main
+      - name: Set up Perl
+        run: brew install cpanminus
+      - name: perl -V
+        run: perl -V
+      - name: Install Dependencies
+        run: cpanm --notest --installdeps --with-configure --with-recommends .
+      - name: Install Optionals
+        run: 'cpanm --notest --verbose Mojolicious ||:'
+      - name: perl Makefile.PL
+        run: perl Makefile.PL
+      - name: make
+        run: make
+      - name: Run Tests
+        run: make test
+
+  windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@main
+      - name: Set up Perl
+        run: |
+          choco install strawberryperl
+          echo "C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin" >> $GITHUB_PAT
+      - name: perl -V
+        run: perl -V
+      - name: Install Dependencies
+        run: curl -L https://cpanmin.us | perl - --notest --installdeps .
+      - name: perl Makefile.PL
+        run: perl Makefile.PL
+      - name: make
+        run: make
+      - name: Run Tests
+        run: make test
+
+  cygwin:
+    runs-on: windows-latest
+
+    steps:
+      - name: Set up Cygwin
+        uses: egor-tensin/setup-cygwin@master
+        with:
+            platform: x64
+            packages: perl_base perl-ExtUtils-MakeMaker make gcc-g++ libcrypt-devel libnsl-devel bash
+      - uses: actions/checkout@main
+        with:
+            submodules: recursive
+      - name: Build and test
+        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
+        run: |
+            perl -V
+            cpan -T App::cpanminus
+            cd $GITHUB_WORKSPACE;
+            cpanm --verbose --notest --installdeps --with-configure --with-recommends .
+            perl Makefile.PL
+            make test
+
+  BSDs:
+    runs-on: macos-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+        - name: freebsd
+          version: '13.0'
+          pkginstall: pkg install -y perl5
+        - name: openbsd
+          version: '6.9'
+          pkginstall: echo yes
+        - name: openbsd
+          version: '7.1'
+          pkginstall: echo yes
+
+    steps:
+      - uses: actions/checkout@main
+        with:
+          submodules: recursive
+
+      - name: Test on ${{ matrix.os.name }}
+        uses: cross-platform-actions/action@master
+        with:
+          operating_system: ${{ matrix.os.name }}
+          version: ${{ matrix.os.version }}
+          shell: bash
+          run: |
+            sudo ${{ matrix.os.pkginstall }}
+            curl -L https://cpanmin.us | sudo perl - --verbose --notest --installdeps --with-configure --with-develop .
+            perl Makefile.PL
+            make
+            prove -wlvmb t
