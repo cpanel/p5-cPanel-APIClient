@@ -116,6 +116,28 @@ jobs:
             perl Makefile.PL
             make test
 
+  qemu:
+    runs-on: ubuntu-latest
+
+    name: QEMU (${{ matrix.platform }})
+
+    strategy:
+      matrix:
+        platform:
+          - i386
+          - s390x
+          - arm32v7
+          - arm64v8
+
+    steps:
+      - uses: actions/checkout@main
+        with:
+            submodules: recursive
+      - name: Get the qemu container
+        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      - name: Run tests on ${{ matrix.platform }}
+        run: docker run --rm --interactive --mount type=bind,source=$(pwd),target=/host ${{ matrix.platform }}/ubuntu bash -c "apt update; apt install -y perl cpanminus make; perl -V; cd /host; cpanm --with-configure --notest --with-recommends --installdeps .; cpanm --notest Mojolicous; perl Makefile.PL; make; prove -wlvmb t"
+
   BSDs:
     runs-on: macos-latest
 
