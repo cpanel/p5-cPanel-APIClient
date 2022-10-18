@@ -44,7 +44,7 @@ jobs:
       - name: perl -V
         run: perl -V
       - name: Install Dependencies
-        run: cpanm --notest --installdeps --with-configure --with-recommends .
+        run: cpanm --notest --installdeps --with-configure --with-recommends --verbose .
       - name: Install Version-Dependent Optionals
         run: 'cpanm --notest Mojolicious ||:'
       - name: perl Makefile.PL
@@ -64,7 +64,7 @@ jobs:
       - name: perl -V
         run: perl -V
       - name: Install Dependencies
-        run: cpanm --notest --installdeps --with-configure --with-recommends .
+        run: cpanm --notest --installdeps --with-configure --with-recommends --verbose .
       - name: Install Optionals
         run: 'cpanm --notest --verbose Mojolicious ||:'
       - name: perl Makefile.PL
@@ -86,7 +86,7 @@ jobs:
       - name: perl -V
         run: perl -V
       - name: Install Dependencies
-        run: curl -L https://cpanmin.us | perl - --notest --installdeps .
+        run: curl -L https://cpanmin.us | perl - --notest --installdeps --verbose .
       - name: perl Makefile.PL
         run: perl Makefile.PL
       - name: make
@@ -112,7 +112,7 @@ jobs:
             perl -V
             cpan -T App::cpanminus
             cd $GITHUB_WORKSPACE;
-            cpanm --verbose --notest --installdeps --with-configure --with-recommends .
+            cpanm --verbose --notest --installdeps --with-configure --with-recommends --verbose .
             perl Makefile.PL
             make test
 
@@ -136,7 +136,7 @@ jobs:
       - name: Get the qemu container
         run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
       - name: Run tests on ${{ matrix.platform }}
-        run: docker run --rm --interactive --mount type=bind,source=$(pwd),target=/host ${{ matrix.platform }}/ubuntu bash -c "apt update; apt install -y perl cpanminus make; perl -V; cd /host; cpanm --with-configure --notest --with-recommends --installdeps .; cpanm --notest Mojolicous; perl Makefile.PL; make; prove -wlvmb t"
+        run: docker run --rm --interactive --mount type=bind,source=$(pwd),target=/host ${{ matrix.platform }}/ubuntu bash -c "apt update; apt install -y perl cpanminus make; perl -V; cd /host; cpanm --with-configure --notest --with-recommends --installdeps --verbose .; cpanm --verbose --notest Mojolicous; perl Makefile.PL; make; prove -wlvmb t"
 
   BSDs:
     runs-on: macos-latest
