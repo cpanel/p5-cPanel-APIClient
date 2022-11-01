@@ -1,7 +1,7 @@
 Revision history for Perl module cPanel::APIClient
 
-0.10
-- Fix OpenSSL 3 compatibility.
+0.10 - 1 Nov 2022
+- Make tests work with OpenSSL 3.
 
 0.09 - 19 Oct 2022
 - Add UAPI response documentation.
