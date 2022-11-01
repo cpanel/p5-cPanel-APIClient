@@ -14,6 +14,28 @@ env:
     PERL_CARTON_PATH: $GITHUB_WORKSPACE/local
 
 jobs:
+  Linux-fedora:
+    runs-on: ubuntu-latest
+
+    container:
+      image: fedora
+
+    steps:
+      - uses: actions/checkout@main
+      - run: dnf install -y perl-App-cpanminus
+      - name: perl -V
+        run: perl -V
+      - name: Install Dependencies
+        run: cpanm --notest --installdeps --with-configure --with-recommends --with-develop --verbose .
+      - name: Install Version-Dependent Optionals
+        run: cpanm --notest Mojolicious
+      - name: perl Makefile.PL
+        run: perl Makefile.PL
+      - name: make
+        run: make
+      - name: Run Tests
+        run: prove -wlvm t
+
   linux:
     runs-on: ubuntu-latest
 
